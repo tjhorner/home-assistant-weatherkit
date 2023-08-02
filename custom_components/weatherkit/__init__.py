@@ -1,7 +1,7 @@
-"""Custom integration to integrate integration_blueprint with Home Assistant.
+"""Custom integration to integrate weatherkit with Home Assistant.
 
 For more details about this integration, please refer to
-https://github.com/ludeeus/integration_blueprint
+https://github.com/tjhorner/home-assistant-weatherkit
 """
 from __future__ import annotations
 
@@ -10,26 +10,24 @@ from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import IntegrationBlueprintApiClient
-from .const import DOMAIN
-from .coordinator import BlueprintDataUpdateCoordinator
+from .api import WeatherKitApiClient
+from .const import DOMAIN, CONF_KEY_ID, CONF_SERVICE_ID, CONF_TEAM_ID, CONF_KEY_PEM
+from .coordinator import WeatherKitDataUpdateCoordinator
 
-PLATFORMS: list[Platform] = [
-    Platform.SENSOR,
-    Platform.BINARY_SENSOR,
-    Platform.SWITCH,
-]
+PLATFORMS: list[Platform] = [Platform.WEATHER]
 
 
 # https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up this integration using UI."""
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = coordinator = BlueprintDataUpdateCoordinator(
+    hass.data[DOMAIN][entry.entry_id] = coordinator = WeatherKitDataUpdateCoordinator(
         hass=hass,
-        client=IntegrationBlueprintApiClient(
-            username=entry.data[CONF_USERNAME],
-            password=entry.data[CONF_PASSWORD],
+        client=WeatherKitApiClient(
+            key_id=entry.data[CONF_KEY_ID],
+            service_id=entry.data[CONF_SERVICE_ID],
+            team_id=entry.data[CONF_TEAM_ID],
+            key_pem=entry.data[CONF_KEY_PEM],
             session=async_get_clientsession(hass),
         ),
     )

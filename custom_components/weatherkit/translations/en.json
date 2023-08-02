@@ -1,0 +1,30 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "WeatherKit Setup",
+                "description": "Enter your location details and WeatherKit authentication credentials below.",
+                "data": {
+                    "name": "Name",
+                    "latitude": "Latitude",
+                    "longitude": "Longitude",
+                    "elevation": "Elevation",
+                    "key_id": "Key ID",
+                    "team_id": "Apple Team ID",
+                    "service_id": "Service ID",
+                    "key_pem": "Private Key (PEM)"
+                }
+            }
+        },
+        "error": {
+            "already_configured": "This integration has already been configured",
+            "unsupported_location": "Apple WeatherKit does not provide data for this location.",
+            "auth": "Your credentials appear to be incorrect. Please check them and try again.",
+            "unknown": "Something really bad happened. Check the logs for more details.",
+            "connection": "Could not connect to WeatherKit. Please check your connection and firewall, then try again."
+        },
+        "abort": {
+            "no_home": "No home coordinates are set in the Home Assistant configuration"
+        }
+    }
+}

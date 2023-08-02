@@ -1,4 +1,4 @@
-"""DataUpdateCoordinator for integration_blueprint."""
+"""DataUpdateCoordinator for weatherkit."""
 from __future__ import annotations
 
 from datetime import timedelta
@@ -11,16 +11,21 @@ from homeassistant.helpers.update_coordinator import (
 )
 from homeassistant.exceptions import ConfigEntryAuthFailed
 
+from homeassistant.const import (
+    CONF_LATITUDE,
+    CONF_LONGITUDE,
+)
+
 from .api import (
-    IntegrationBlueprintApiClient,
-    IntegrationBlueprintApiClientAuthenticationError,
-    IntegrationBlueprintApiClientError,
+    WeatherKitApiClient,
+    WeatherKitApiClientAuthenticationError,
+    WeatherKitApiClientError,
 )
 from .const import DOMAIN, LOGGER
 
 
 # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
-class BlueprintDataUpdateCoordinator(DataUpdateCoordinator):
+class WeatherKitDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the API."""
 
     config_entry: ConfigEntry
@@ -28,7 +33,7 @@ class BlueprintDataUpdateCoordinator(DataUpdateCoordinator):
     def __init__(
         self,
         hass: HomeAssistant,
-        client: IntegrationBlueprintApiClient,
+        client: WeatherKitApiClient,
     ) -> None:
         """Initialize."""
         self.client = client
@@ -36,14 +41,17 @@ class BlueprintDataUpdateCoordinator(DataUpdateCoordinator):
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=5),
+            update_interval=timedelta(minutes=15),
         )
 
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            return await self.client.async_get_data()
-        except IntegrationBlueprintApiClientAuthenticationError as exception:
+            return await self.client.get_weather_data(
+                self.config_entry.data[CONF_LATITUDE],
+                self.config_entry.data[CONF_LONGITUDE],
+            )
+        except WeatherKitApiClientAuthenticationError as exception:
             raise ConfigEntryAuthFailed(exception) from exception
-        except IntegrationBlueprintApiClientError as exception:
+        except WeatherKitApiClientError as exception:
             raise UpdateFailed(exception) from exception

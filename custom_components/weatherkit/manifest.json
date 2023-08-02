@@ -1,0 +1,12 @@
+{
+  "domain": "weatherkit",
+  "name": "Apple WeatherKit",
+  "config_flow": true,
+  "documentation": "https://github.com/tjhorner/home-assistant-weatherkit",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/tjhorner/home-assistant-weatherkit/issues",
+  "version": "0.0.1",
+  "requirements": [
+    "pyjwt[crypto]==2.7.0"
+  ]
+}
