@@ -10,6 +10,6 @@
   "issue_tracker": "https://github.com/tjhorner/home-assistant-weatherkit/issues",
   "version": "0.0.1",
   "requirements": [
-    "pyjwt[crypto]==2.7.0"
+    "pyjwt[crypto]==2.*"
   ]
 }
