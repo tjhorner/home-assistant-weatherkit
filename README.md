@@ -16,15 +16,15 @@ You will need to obtain the appropriate credentials which you will use to connec
 
 1. Go to Certificates, Identifiers & Profiles in your Apple Developer account.
 2. In the [Keys](https://developer.apple.com/account/resources/authkeys/list) section, add a new key.
-  1. Name it whatever you want.
-  2. Select "WeatherKit" from the list.
-  3. Download the `.p8` file provided. This is your **Private Key**.
-  4. Write down the **Key ID**. You will need it later.
+    1. Name it whatever you want.
+    2. Select "WeatherKit" from the list.
+    3. Download the `.p8` file provided. This is your **Private Key**.
+    4. Write down the **Key ID**. You will need it later.
 3. In the [Identifiers](https://developer.apple.com/account/resources/identifiers/list) section, add a new identifier.
-  1. Select "Services IDs" from the list.
-  2. Write whatever you want for the description.
-  3. For the identifier, I recommend using a reverse-DNS style name, like `com.example.homeassistant`.
-  4. Save the identifier you used. This is your **Service ID**.
+    1. Select "Services IDs" from the list.
+    2. Write whatever you want for the description.
+    3. For the identifier, I recommend using a reverse-DNS style name, like `com.example.homeassistant`.
+    4. Save the identifier you used. This is your **Service ID**.
 
 Now that you have all the credentials, you can add a new WeatherKit integration entry. This is done via the Home Assistant UI. Using the details from earlier, it should look something like this:
 
