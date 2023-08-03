@@ -12,7 +12,7 @@
                     "key_id": "Key ID",
                     "team_id": "Apple Team ID",
                     "service_id": "Service ID",
-                    "key_pem": "Private Key (PEM)"
+                    "key_pem": "Private Key (.p8)"
                 }
             }
         },
