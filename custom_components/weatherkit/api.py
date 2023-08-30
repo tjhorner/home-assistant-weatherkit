@@ -64,7 +64,7 @@ class WeatherKitApiClient:
             {
                 "iss": self._team_id,
                 "iat": datetime.datetime.utcnow(),
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=1),
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
                 "sub": self._service_id,
             },
             self._key_pem,
@@ -88,10 +88,13 @@ class WeatherKitApiClient:
                     headers=headers,
                     json=data,
                 )
+
                 if response.status in (401, 403):
+                    body = await response.text()
                     raise WeatherKitApiClientAuthenticationError(
-                        "Invalid credentials",
+                        f"Invalid credentials: {body}",
                     )
+
                 response.raise_for_status()
                 return await response.json()
 
