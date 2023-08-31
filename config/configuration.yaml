@@ -6,3 +6,6 @@ logger:
   default: info
   logs:
     custom_components.integration_blueprint: debug
+
+weather:
+  - platform: demo

@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import asyncio
+from collections import OrderedDict
 import socket
+from urllib.parse import urlencode
 
 import aiohttp
 import async_timeout
@@ -32,7 +34,6 @@ class WeatherKitApiClient:
         key_pem: str,
         session: aiohttp.ClientSession,
     ) -> None:
-        """Sample API Client."""
         self._key_id = key_id
         self._service_id = service_id
         self._team_id = team_id
@@ -44,9 +45,19 @@ class WeatherKitApiClient:
     ) -> any:
         """OBTAIN WEATHER DATA!!!!!!!!!!"""
         token = self._generate_jwt()
+        query = urlencode(
+            OrderedDict(
+                dataSets="currentWeather,forecastDaily,forecastHourly",
+                hourlyStart=datetime.datetime.utcnow().isoformat() + "Z",
+                hourlyEnd=(
+                    datetime.datetime.utcnow() + datetime.timedelta(days=1)
+                ).isoformat()
+                + "Z",
+            )
+        )
         return await self._api_wrapper(
             method="get",
-            url=f"https://weatherkit.apple.com/api/v1/weather/{lang}/{lat}/{lon}?dataSets=currentWeather,forecastDaily",
+            url=f"https://weatherkit.apple.com/api/v1/weather/{lang}/{lat}/{lon}?{query}",
             headers={"Authorization": f"Bearer {token}"},
         )
 

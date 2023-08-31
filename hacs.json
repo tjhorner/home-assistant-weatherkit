@@ -1,5 +1,5 @@
 {
     "name": "Apple WeatherKit",
-    "homeassistant": "2023.7.0",
+    "homeassistant": "2023.9.0",
     "render_readme": true
 }
