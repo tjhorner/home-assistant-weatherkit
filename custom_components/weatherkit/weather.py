@@ -1,6 +1,10 @@
 from types import MappingProxyType
 from typing import Any
-from homeassistant.components.weather import WeatherEntity
+from homeassistant.components.weather import (
+    Forecast,
+    WeatherEntity,
+    WeatherEntityFeature,
+)
 from homeassistant.const import (
     CONF_LATITUDE,
     CONF_LONGITUDE,
@@ -78,7 +82,7 @@ condition_code_to_hass = {
 }
 
 
-def _map_daily_forecast(forecast):
+def _map_daily_forecast(forecast) -> Forecast:
     return {
         "datetime": forecast.get("forecastStart"),
         "condition": condition_code_to_hass[forecast.get("conditionCode")],
@@ -87,6 +91,25 @@ def _map_daily_forecast(forecast):
         "native_precipitation": forecast.get("precipitationAmount"),
         "precipitation_probability": forecast.get("precipitationChance") * 100,
         "uv_index": forecast.get("maxUvIndex"),
+    }
+
+
+def _map_hourly_forecast(forecast) -> Forecast:
+    return {
+        "datetime": forecast.get("forecastStart"),
+        "condition": condition_code_to_hass[forecast.get("conditionCode")],
+        "native_temperature": forecast.get("temperature"),
+        "native_apparent_temperature": forecast.get("temperatureApparent"),
+        "native_dew_point": forecast.get("temperatureDewPoint"),
+        "native_pressure": forecast.get("pressure"),
+        "native_wind_gust_speed": forecast.get("windGust"),
+        "native_wind_speed": forecast.get("windSpeed"),
+        "wind_bearing": forecast.get("windDirection"),
+        "humidity": forecast.get("humidity") * 100,
+        "native_precipitation": forecast.get("precipitationAmount"),
+        "precipitation_probability": forecast.get("precipitationChance") * 100,
+        "cloud_coverage": forecast.get("cloudCover") * 100,
+        "uv_index": forecast.get("uvIndex"),
     }
 
 
@@ -100,6 +123,10 @@ class WeatherKitWeather(
     _attr_native_pressure_unit = UnitOfPressure.MBAR
     _attr_native_visibility_unit = UnitOfLength.KILOMETERS
     _attr_native_wind_speed_unit = UnitOfSpeed.KILOMETERS_PER_HOUR
+
+    _attr_supported_features = (
+        WeatherEntityFeature.FORECAST_DAILY | WeatherEntityFeature.FORECAST_HOURLY
+    )
 
     def __init__(
         self,
@@ -207,10 +234,15 @@ class WeatherKitWeather(
         wind_bearing = self.coordinator.data.get("currentWeather").get("windDirection")
         return wind_bearing
 
-    @property
-    def forecast(self) -> list | None:
+    async def async_forecast_daily(self) -> list[Forecast] | None:
         """Return the forecast."""
         if not self.coordinator.data.get("forecastDaily"):
             return None
         forecast = self.coordinator.data.get("forecastDaily").get("days")
         return [_map_daily_forecast(f) for f in forecast]
+
+    async def async_forecast_hourly(self) -> list[Forecast] | None:
+        if not self.coordinator.data.get("forecastHourly"):
+            return None
+        forecast = self.coordinator.data.get("forecastHourly").get("hours")
+        return [_map_hourly_forecast(f) for f in forecast]
