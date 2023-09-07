@@ -2,6 +2,7 @@ from types import MappingProxyType
 from typing import Any
 from homeassistant.components.weather import (
     Forecast,
+    SingleCoordinatorWeatherEntity,
     WeatherEntity,
     WeatherEntityFeature,
 )
@@ -15,7 +16,7 @@ from homeassistant.const import (
     UnitOfTemperature,
 )
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -114,7 +115,7 @@ def _map_hourly_forecast(forecast) -> Forecast:
 
 
 class WeatherKitWeather(
-    CoordinatorEntity[WeatherKitDataUpdateCoordinator], WeatherEntity
+    SingleCoordinatorWeatherEntity[WeatherKitDataUpdateCoordinator]
 ):
     _attr_attribution = ATTRIBUTION
 
@@ -234,14 +235,16 @@ class WeatherKitWeather(
         wind_bearing = self.coordinator.data.get("currentWeather").get("windDirection")
         return wind_bearing
 
-    async def async_forecast_daily(self) -> list[Forecast] | None:
+    @callback
+    def _async_forecast_daily(self) -> list[Forecast] | None:
         """Return the forecast."""
         if not self.coordinator.data.get("forecastDaily"):
             return None
         forecast = self.coordinator.data.get("forecastDaily").get("days")
         return [_map_daily_forecast(f) for f in forecast]
 
-    async def async_forecast_hourly(self) -> list[Forecast] | None:
+    @callback
+    def _async_forecast_hourly(self) -> list[Forecast] | None:
         if not self.coordinator.data.get("forecastHourly"):
             return None
         forecast = self.coordinator.data.get("forecastHourly").get("hours")
