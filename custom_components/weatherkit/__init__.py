@@ -30,7 +30,7 @@ PLATFORMS: list[Platform] = [Platform.WEATHER]
 # https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up this integration using UI."""
-    if MAJOR_VERSION == 2023 and MINOR_VERSION >= 10:
+    if MAJOR_VERSION >= 2023 and MINOR_VERSION >= 10:
         async_create_issue(
             hass,
             DOMAIN,
