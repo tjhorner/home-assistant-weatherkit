@@ -1,5 +1,11 @@
 # Home Assistant Apple WeatherKit Integration
 
+# ⚠️ IMPORTANT NOTICE ⚠️
+
+This integration is included officially in Home Assistant as of version 2023.10. If you are on at least that version, you should not install this custom component, and instead use the official integration.
+
+---
+
 This is a Home Assistant custom component which provides current weather and a daily forecast from Apple WeatherKit. If you are coming from Dark Sky, this is the closest you will get to the same data.
 
 ## Requirements

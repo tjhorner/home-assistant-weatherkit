@@ -26,5 +26,11 @@
         "abort": {
             "no_home": "No home coordinates are set in the Home Assistant configuration"
         }
+    },
+    "issues": {
+        "custom_component_deprecated": {
+            "title": "WeatherKit custom component deprecated",
+            "description": "The WeatherKit integration is included officially as of Home Assistant 2023.10. Please remove the custom WeatherKit component (e.g., via HACS) then restart Home Assistant."
+        }
     }
 }
