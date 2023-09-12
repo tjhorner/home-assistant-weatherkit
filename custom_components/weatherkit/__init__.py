@@ -4,14 +4,12 @@ For more details about this integration, please refer to
 https://github.com/tjhorner/home-assistant-weatherkit
 """
 from __future__ import annotations
+from awesomeversion import AwesomeVersion
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    CONF_PASSWORD,
-    CONF_USERNAME,
     Platform,
-    MAJOR_VERSION,
-    MINOR_VERSION,
+    __short_version__,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -30,7 +28,8 @@ PLATFORMS: list[Platform] = [Platform.WEATHER]
 # https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up this integration using UI."""
-    if MAJOR_VERSION >= 2023 and MINOR_VERSION >= 10:
+    current_ha_version = AwesomeVersion(__short_version__)
+    if current_ha_version >= AwesomeVersion("2023.10"):
         async_create_issue(
             hass,
             DOMAIN,
